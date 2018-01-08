@@ -1,0 +1,76 @@
+<div class="breadcrumbs" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Home</a>
+        </li>
+        <li class="active">Signup</li>
+    </ul>
+</div>
+<div class="page-content">
+    <div class="row">
+        <div class="space-6"></div>
+        <div class="col-sm-6 col-sm-offset-1">
+            <div id="login-box" class="login-box visible widget-box no-border">
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <h4 class="header blue lighter bigger">
+                            Signup for Geronimo Applications
+                        </h4>
+                        <br/>
+                        <form name="signupForm" class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label no-padding-right" for="name">Name</label>
+                                <div class="col-sm-7">
+                                    <span class="block input-icon input-icon-right">
+                                        <input id="name" type="text" class="form-control" placeholder="Name" ng-model="name" />
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label no-padding-right" for="email">Email</label>
+                                <div class="col-sm-7">
+                                    <span class="block input-icon input-icon-right">
+                                        <input id="email" type="text" class="form-control" placeholder="Email" name="email" ng-model="email" focus/>
+                                        <span ng-show="signupForm.email.$error.email" class="help-inline">Email is not valid</span> 
+                                    </span>
+                                </div>
+                            </div>
+<!--                            <div class="form-group">
+                                <label class="col-sm-5 control-label no-padding-right" for="password">Password</label>
+                                <div class="col-sm-7">
+                                    <span class="block input-icon input-icon-right">
+                                        <input id="password" type="password" class="form-control" name = "password" placeholder="Password" ng-model="password" required/>
+                                        <small class="errorMessage" data-ng-show="password.$dirty && password.$invalid"> Enter Password.</small>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label no-padding-right" for="password2">Confirm Password</label>
+                                <div class="col-sm-7">
+                                    <span class="block input-icon input-icon-right">
+                                        <input id="password2" type="password" class="form-control" name="password2" placeholder="Password Again" ng-model="password2" password-match="signup.password" required/>                                
+                                        <small class="errorMessage" data-ng-show="password2.$dirty && password2.$error.required"> Enter password again.</small>
+                                        <small class="errorMessage" data-ng-show="password2.$dirty && password2.$error.passwordNoMatch && !password2.$error.required"> Password do not match.</small>
+                                        <div class="alert alert-danger" data-ng-show="password.length > 0  && password2.length > 0 && password !== password2">Passwords do not match.</div>
+                                    </span>
+                                </div>
+                            </div>                            -->
+                            <div class="form-group">
+                                <div class="col-sm-5"></div>
+                                <div class="col-sm-5">
+                                    Already have an account? <a href="#/login">Login</a>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" class="btn btn-block btn-primary" ng-click="signup()" data-ng-disabled="signupForm.$invalid">
+                                        Sign Up
+                                    </button>
+                                </div>
+                            </div>
+                            <span class="lbl col-sm-5"> </span>                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

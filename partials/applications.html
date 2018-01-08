@@ -1,0 +1,146 @@
+<div class="container-fluid" ng-hide="edit" style="margin:0;padding:0">
+    <h3>Applications List</h3>
+    <hr />
+    <form role="form" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 responsive_margin">
+                <button type="button" class="btn btn-block btn-primary" ng-click="newEntry()">
+                    <span class="glyphicon glyphicon-plus"></span> New
+                </button>
+            </div>            
+            <div class="col-sm-4 responsive_margin">
+                <input class="form-control" type="text" ng-model="search" placeholder="search..." />
+            </div>
+            <div class="col-sm-4 responsive_margin">
+                <nav>
+                    <ul class="pager" style="margin:0">
+                        <li ng-class="prevPageDisabled()">
+                            <a ng-click="setPage(0)"><span class="glyphicon glyphicon-step-backward"></span></a>
+                        </li>
+                        <li ng-class="prevPageDisabled()">
+                            <a ng-click="prevPage()"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                        </li>
+                        <li ng-class="nextPageDisabled()">
+                            <a ng-click="nextPage()"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                        </li>
+                        <li ng-class="nextPageDisabled()">
+                            <a ng-click="setPage(pageCount)"><span class="glyphicon glyphicon-step-forward"></span></a>
+                        </li>                        
+                    </ul>                    
+                </nav>
+            </div>
+            <div class="col-sm-2">
+                <pre class="text-center" style="margin:0;padding:7px">{{currentPage + 1}}/{{pageCount + 1}}</pre>
+            </div>            
+        </div>    
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="text-align:center;">Code</th>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th style="text-align:center;" class="responsive_hide">Create Date</th>
+                    <th style="text-align:center;" class="responsive_hide">Update Date</th>
+                    <th style="text-align:center;" class="responsive_hide">Expiry Date</th>
+                    <th style="text-align:center;">Edit</th>
+                    <th style="text-align:center;">Open</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in entries| filter:search | limitTo: itemsPerPage : (currentPage * itemsPerPage)" ng-model="entries">
+                    <td style="text-align:center;">{{entry.code}}</td>
+                    <td>{{paramTypes[entry.type_id].name}}</td>
+                    <td>{{entry.name}}</td>
+                    <td style="text-align:center;" class="responsive_hide">{{entry.create_time}}</td>
+                    <td style="text-align:center;" class="responsive_hide">{{entry.update_time}}</td>
+                    <td style="text-align:center;" class="responsive_hide">{{entry.expiry_date}}</td>
+                    <td style="text-align:center;">
+                        <button class="btn btn-default" ng-click="editEntry(entry_index[entry.id])">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </button>
+                    </td>
+                    <td style="text-align:center;">
+                        <button class="btn btn-success" ng-click="openEntry(entry_index[entry.id])">
+                            <span class="glyphicon glyphicon-off"></span>
+                        </button>
+<!--                        <a class="btn btn-success" href="applications/quickcount" target="_blank">
+                            <span class="glyphicon glyphicon-off"></span>
+                        </a>-->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<div class="container-fluid" ng-show="edit" style="margin:0;padding:0">
+    <h3>New Application</h3>
+    <hr />
+    <form role="form" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-warning" ng-click="returnToList()">
+                    <span class="glyphicon glyphicon-step-backward"></span> Back
+                </button>
+            </div>
+            <div class="col-sm-3">
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-danger" ng-click="deleteEntry()" ng-disabled="!edit || error || incomplete">
+                    <span class="glyphicon glyphicon-remove"></span> Delete
+                </button>
+            </div>
+            <div class="col-sm-3">
+            </div>        
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-success" ng-click="saveEntry()" ng-disabled="!edit || error || incomplete">
+                    <span class="glyphicon glyphicon-save"></span> Save
+                </button>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group has-feedback {{error_code_type}}">
+            <label for="code" class="col-sm-2 control-label">Code</label>
+            <div class="col-sm-4">
+                <input id="code" type="text" class="form-control" ng-model="code" placeholder="Code" ng-disabled="user_restricted"/>
+                <span class="glyphicon form-control-feedback {{error_code_sign}}"></span>
+            </div>            
+            <label for="type" class="col-sm-2 control-label">Type</label>
+            <div class="col-sm-4">
+                <select id="type" class="form-control" ng-options="p.id as p.name for p in paramTypes" ng-model="type_id"></select>
+            </div>
+        </div>
+        <div class="form-group has-feedback {{error_name_type}}">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input id="name" class="form-control" type="text" ng-model="name" placeholder="Name" />
+                <span class="glyphicon form-control-feedback {{error_name_sign}}"></span>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="note" class="col-sm-2 control-label">Note</label>
+            <div class="col-sm-10">
+                <textarea id="note" class="form-control" rows="3" ng-model="note" placeholder="Notes / Comments" ></textarea>
+            </div>
+        </div>
+        <hr />
+    </form>
+</div>
+<!-- Modal Message Dialog -->
+<div id="messageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{msg_title}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{msg_body}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

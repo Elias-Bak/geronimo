@@ -1,0 +1,186 @@
+<!-- dashboard -->
+<div class="container-fluid" style="margin:0;padding:0">
+    <h3>{{params["100007"].value}}</h3>
+    <hr />
+    <form name="dashboard" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <label for="year" class="col-sm-1 control-label">{{params["100053"].value}}</label>
+            <div class="col-sm-2">
+                <select id="year" class="form-control" ng-options="p as p for p in year_list" ng-model="selected_year" ng-change="showDashboard()" style="text-align:center;padding-right:0"></select>
+            </div>
+            <div class="col-sm-6">
+            </div>
+            <label for="currency" class="col-sm-1 control-label">{{params["100052"].value}}</label>
+            <div class="col-sm-2">
+                <select id="currency" class="form-control" ng-options="p.id as p.name for p in currency_list" ng-model="currency_id" ng-change="showDashboard()" style="text-align:center;padding-right:0"></select>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <div class="col-sm-6">
+                <div chart="dashboard_chart01_accounts_monthly" google-chart></div>
+            </div>
+            <div class="col-sm-6">
+                <div chart="dashboard_chart02_turnover_monthly" google-chart></div>
+            </div>
+        </div>
+        <hr />
+        <!-- Google AdSense code -->
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- Resp Add EB -->        
+        <ins class="adsbygoogle"
+             style="display:block;"
+             data-ad-client="ca-pub-8702131031247010"
+             data-ad-slot="1355396280"
+             data-ad-format="auto"></ins>
+        <script>
+            //(adsbygoogle = window.adsbygoogle || []).push({});
+            //$(document).ready(function(){(adsbygoogle = window.adsbygoogle || []).push({})});
+            //setTimeout(function(){(adsbygoogle = window.adsbygoogle || []).push({})}, 1000);
+        </script>
+        <hr />
+        <div class="form-group">
+            <div class="col-sm-6">
+                <div chart="dashboard_chart03_sales_yearly" google-chart></div>
+            </div>
+            <div class="col-sm-6">
+                <div chart="dashboard_chart04_sales_monthly" google-chart></div>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="month" class="col-sm-1 control-label">{{params["100054"].value}}</label>
+            <div class="col-sm-2">
+                <select id="month" class="form-control" ng-options="p.id as p.name for p in month_list" ng-model="selected_month" ng-change="showDashboard()" style="text-align:center;padding-right:0"></select>
+            </div>
+            <div class="col-sm-9">
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <div class="col-sm-6">
+                <h4 style="text-align:center;">{{params["100061"].value}}</h4>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;">{{params["100062"].value}}</th>
+                            <th style="text-align:center;">{{params["100063"].value}}</th>
+                            <th>{{params["100064"].value}}</th>
+                            <th style="text-align:end;">{{params["100065"].value}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="active" ng-repeat="entry in transactions_01" ng-model="transactions_01">
+                            <td style="text-align:center;">{{entry.day}}</td>
+                            <td style="text-align:center;">{{entry.type_code}} {{entry.number}}</td>
+                            <td>{{entry.company_name}}</td>
+                            <td style="text-align:end;">{{params[entry.currency_id].name}} {{entry.nettotal| number:2}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr ng-repeat="(currency_name, entry) in totals_01">
+                            <td></td>
+                            <td></td>
+                            <td><strong>{{params["100066"].value}}</strong></td>
+                            <td style="text-align:end;"><strong>{{currency_name}} {{entry.nettotal| number:2}}</strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <h4 style="text-align:center;">{{params["100071"].value}}</h4>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;">{{params["100072"].value}}</th>
+                            <th style="text-align:center;">{{params["100073"].value}}</th>
+                            <th>{{params["100074"].value}}</th>
+                            <th style="text-align:end;">{{params["100075"].value}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="success" ng-repeat="entry in transactions_02" ng-model="transactions_02">
+                            <td style="text-align:center;">{{entry.day}}</td>
+                            <td style="text-align:center;">{{entry.type_code}} {{entry.number}}</td>
+                            <td>{{entry.company_name}}</td>
+                            <td style="text-align:end;">{{params[entry.currency_id].name}} {{entry.nettotal| number:2}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr ng-repeat="(currency_name, entry) in totals_02">
+                            <td></td>
+                            <td></td>
+                            <td><strong>{{params["100076"].value}}</strong></td>
+                            <td style="text-align:end;"><strong>{{currency_name}} {{entry.nettotal| number:2}}</strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <div class="col-sm-6">
+                <h4 style="text-align:center;">{{params["100081"].value}}</h4>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;">{{params["100082"].value}}</th>
+                            <th style="text-align:center;">{{params["100083"].value}}</th>
+                            <th>{{params["100084"].value}}</th>
+                            <th style="text-align:end;">{{params["100085"].value}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="warning" ng-repeat="entry in transactions_03" ng-model="transactions_03">
+                            <td style="text-align:center;">{{entry.day}}</td>
+                            <td style="text-align:center;">{{entry.type_code}} {{entry.number}}</td>
+                            <td>{{entry.company_name}}</td>
+                            <td style="text-align:end;">{{params[entry.currency_id].name}} {{entry.nettotal| number:2}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr ng-repeat="(currency_name, entry) in totals_03">
+                            <td></td>
+                            <td></td>
+                            <td><strong>{{params["100086"].value}}</strong></td>
+                            <td style="text-align:end;"><strong>{{currency_name}} {{entry.nettotal| number:2}}</strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <h4 style="text-align:center;">{{params["100091"].value}}</h4>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;">{{params["100092"].value}}</th>
+                            <th style="text-align:center;">{{params["100093"].value}}</th>
+                            <th>{{params["100094"].value}}</th>
+                            <th style="text-align:end;">{{params["100095"].value}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="danger" ng-repeat="entry in transactions_04" ng-model="transactions_04">
+                            <td style="text-align:center;">{{entry.day}}</td>
+                            <td style="text-align:center;">{{entry.type_code}} {{entry.number}}</td>
+                            <td>{{entry.company_name}}</td>
+                            <td style="text-align:end;">{{params[entry.currency_id].name}} {{entry.nettotal| number:2}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr ng-repeat="(currency_name, entry) in totals_04">
+                            <td></td>
+                            <td></td>
+                            <td><strong>{{params["100096"].value}}</strong></td>
+                            <td style="text-align:end;"><strong>{{currency_name}} {{entry.nettotal| number:2}}</strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>        
+    </form>
+</div>

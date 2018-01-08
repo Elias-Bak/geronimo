@@ -1,0 +1,31 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Aug 27, 2016, 12:07:16 PM
+    Author     : loos
+*/
+
+.view-container {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+    width: 40%;
+    margin: auto;
+}
+
+@media (max-width: 767px) {
+    .responsive_margin {
+        margin-bottom: 10px;
+    }
+    .responsive_hide {
+        display: none
+    }
+}
+
+

@@ -1,0 +1,157 @@
+<div class="container-fluid" ng-hide="edit" style="margin:0;padding:0">
+    <h3>{{params["100009"].value}}</h3>
+    <hr />
+    <form role="form" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 div_filter">
+                <button type="button" class="btn btn-block btn-primary" ng-click="newEntry()">
+                    <span class="glyphicon glyphicon-plus"></span> {{params["300031"].value}}
+                </button>
+            </div>            
+            <div class="col-sm-4 div_filter">
+                <input class="form-control" type="text" ng-model="search" placeholder="{{params['300032'].value}}" />
+            </div>
+            <div class="col-sm-4 div_filter">
+                <nav>
+                    <ul class="pager" style="margin:0">
+                        <li ng-class="prevPageDisabled()">
+                            <a ng-click="setPage(0)"><span class="glyphicon glyphicon-step-backward"></span></a>
+                        </li>
+                        <li ng-class="prevPageDisabled()">
+                            <a ng-click="prevPage()"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                        </li>
+                        <li ng-class="nextPageDisabled()">
+                            <a ng-click="nextPage()"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                        </li>
+                        <li ng-class="nextPageDisabled()">
+                            <a ng-click="setPage(pageCount)"><span class="glyphicon glyphicon-step-forward"></span></a>
+                        </li>                        
+                    </ul>                    
+                </nav>
+            </div>
+            <div class="col-sm-2">
+                <pre class="text-center" style="margin:0;padding:7px">{{currentPage + 1}}/{{pageCount + 1}}</pre>
+            </div>            
+        </div>    
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="text-align:center;">{{params["300011"].value}}</th>
+                    <th>{{params["300012"].value}}</th>
+                    <th class="col_hide" style="text-align:center;">{{params["300013"].value}}</th>
+                    <th style="text-align:end;">{{params["300014"].value}}</th>
+                    <th style="text-align:end;">{{params["300015"].value}}</th>
+                    <th class="col_hide" style="text-align:center;">{{params["300016"].value}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in entries| filter:search | limitTo: itemsPerPage : (currentPage * itemsPerPage)" ng-model="entries">
+                    <td style="text-align:center;">{{entry.code}}</td>
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="editEntry(entry_index[entry.id])">{{entry.name}}</a></td>
+                    <td class="col_hide" style="text-align:center;">{{entry.type_name}}</td>
+                    <td style="text-align:end;">{{entry.amount| number:2}}</td>
+                    <td style="text-align:end;">{{params[entry.currency_id].name}}</td>
+                    <td class="row_icon col_hide">
+                        <button type="button" class="btn" ng-click="editEntry(entry_index[entry.id])">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<div class="container-fluid" ng-show="edit" style="margin:0;padding:0">
+    <h3>{{params["100009"].value}}</h3>
+    <hr />    
+    <form role="form" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-warning div_filter" ng-click="returnToList()">
+                    <span class="glyphicon glyphicon-step-backward"></span> {{params["300033"].value}}
+                </button>
+            </div>
+            <div class="col-sm-3">
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-default div_filter" ng-click="getHistory()" ng-hide="create" ng-disabled="!edit || error || incomplete">
+                    <span class="glyphicon glyphicon-list"></span> {{params["300035"].value}}
+                </button>        
+            </div>
+            <div class="col-sm-3">
+            </div>        
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-success div_filter" ng-click="saveEntry()" ng-disabled="!edit || error || incomplete">
+                    <span class="glyphicon glyphicon-save"></span> {{params["300034"].value}}
+                </button>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group has-feedback {{error_code_type}}">
+            <label for="code" class="col-sm-2 control-label">{{params["300001"].value}}</label>
+            <div class="col-sm-4">
+                <input id="code" type="text" class="form-control" ng-model="code" placeholder="Product Code" />
+                <span class="glyphicon form-control-feedback {{error_code_sign}}"></span>
+            </div>            
+            <label for="type" class="col-sm-2 control-label">{{params["300003"].value}}</label>
+            <div class="col-sm-4">
+                <select id="type" class="form-control" ng-options="p.id as p.name for p in paramItemTypes" ng-model="type_id"></select>
+            </div>
+        </div>
+        <div class="form-group has-feedback {{error_name_type}}">
+            <label for="name" class="col-sm-2 control-label">{{params["300002"].value}}</label>
+            <div class="col-sm-10">
+                <input id="name" class="form-control" type="text" ng-model="name" placeholder="Product Description" />
+                <span class="glyphicon form-control-feedback {{error_name_sign}}"></span>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="tax" class="col-sm-2 control-label">{{params["300004"].value}}</label>
+            <div class="col-sm-4">
+                <select id="tax" class="form-control" ng-options="p.id as p.name for p in paramTaxRates" ng-model="tax_id"></select>
+            </div>
+            <label for="unit" class="col-sm-2 control-label">{{params["300005"].value}}</label>
+            <div class="col-sm-4">
+                <select id="unit" class="form-control" ng-options="p.id as p.name for p in paramQuantityUnits" ng-model="unit_id"></select>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="amount" class="col-sm-2 control-label">{{params["300006"].value}}</label>
+            <div class="col-sm-4">
+                <input id="amount" class="form-control" type="text" ng-model="amount" placeholder="Default Selling Price" />
+            </div>
+            <label for="currency" class="col-sm-2 control-label">{{params["300007"].value}}</label>
+            <div class="col-sm-4">
+                <select id="currency" class="form-control" ng-options="p.id as p.name for p in paramTransactionCurrencies" ng-model="currency_id"></select>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="note" class="col-sm-2 control-label">{{params["300008"].value}}</label>
+            <div class="col-sm-10">
+                <textarea id="note" class="form-control" rows="3" ng-model="note" placeholder="Notes / Comments" ></textarea>
+            </div>
+        </div>
+        <hr />
+    </form>    
+</div>
+<!-- Modal Message Dialog -->
+<div id="messageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{msg_title}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{msg_body}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="breadcrumbs" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li>
+            <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="#">Home</a>
+        </li>
+        <li class="active">Login</li>
+    </ul>
+</div>
+<form class="form-horizontal">
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <h4 class="col-sm-7">
+            Login to Geronimo Applications
+        </h4>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <label for="username" class="col-sm-2 control-label">Email / Phone</label>
+        <div class="col-sm-5">
+            <input id="username" type="text" class="form-control" ng-model="email" required focus placeholder="Enter your email or your phone number">
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <label for="password" class="col-sm-2 control-label">Password</label>
+        <div class="col-sm-5">
+            <input id="password" type="password" class="form-control" ng-model="password" required placeholder="Password">
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-3"><!--Don't have an account? <a href="#/signup">Signup</a>--></div>
+        <div class="col-sm-2"><button type="button" class="btn btn-block btn-primary" ng-click="login()">Login</button></div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-7"><hr /></div>
+        <div class="col-sm-3"></div>
+    </div>
+</form>

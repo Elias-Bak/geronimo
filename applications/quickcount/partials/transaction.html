@@ -1,0 +1,445 @@
+<!-- Operations list form -->
+<div class="container-fluid" ng-show="!edit && show_ops_list" style="margin:0;padding:0">
+    <h3>{{params["400041"].value}}</h3>
+    <hr />
+    <form name="trans_list" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <div class="col-sm-2 div_filter">
+                <button class="btn btn-block btn-primary" ng-click="newEntry()">
+                    <span class="glyphicon glyphicon-plus"></span> {{params["400042"].value}}
+                </button>
+            </div>            
+            <div class="col-sm-4 div_filter">
+                <input class="form-control" type="text" ng-model="trans_search" placeholder="{{params['400037'].value}}" />
+            </div>
+            <div class="col-sm-4 div_filter">
+                <nav>
+                    <ul class="pager" style="margin:0">
+                        <li ng-class="trans_prevPageDisabled()">
+                            <a ng-click="trans_setPage(0)"><span class="glyphicon glyphicon-step-backward"></span></a>
+                        </li>
+                        <li ng-class="trans_prevPageDisabled()">
+                            <a ng-click="trans_prevPage()"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                        </li>
+                        <li ng-class="trans_nextPageDisabled()">
+                            <a ng-click="trans_nextPage()"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                        </li>
+                        <li ng-class="trans_nextPageDisabled()">
+                            <a ng-click="trans_setPage(trans_pageCount)"><span class="glyphicon glyphicon-step-forward"></span></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-sm-2">
+                <pre class="text-center" style="margin:0;padding:7px">{{trans_currentPage + 1}}/{{trans_pageCount + 1}}</pre>
+            </div>            
+        </div>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="text-align:center;">{{params["400061"].value}}</th>
+                    <th class="col_hide" style="text-align:center;">{{params["400062"].value}}</th>
+                    <th class="col_hide" style="text-align:center;">{{params["400063"].value}}</th>
+                    <th>{{params["400064"].value}}</th>
+                    <th style="text-align:end;">{{params["400065"].value}}</th>
+                    <th style="text-align:center;">{{params["400066"].value}}</th>
+                    <th class="col_hide" style="text-align:center;">{{params["400034"].value}}</th>
+                    <th class="col_hide" style="text-align:center;">{{params["400068"].value}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in transactions| filter:trans_search | limitTo: trans_itemsPerPage : (trans_currentPage * trans_itemsPerPage)" ng-model="transactions">
+                    <td style="text-align:center;">{{entry.date}}</td>
+                    <td class="col_hide" style="text-align:center;">{{entry.type_name}}</td>
+                    <td class="col_hide" style="text-align:center;">{{entry.number}}</td>
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="editEntry(trans_index[entry.id] + trans_offset)">{{entry.company_name}} <span class="col_hide" ng-if="entry.company_type.length > 0">({{entry.company_type}})</span></a></td>
+                    <td style="text-align:end;">{{entry.nettotal| number:2}}</td>
+                    <td style="text-align:center;">{{params[entry.currency_id].name}}</td>
+                    <td class="row_icon col_hide">
+                        <button class="btn" ng-click="printEntry(entry.id, entry.type_id)">
+                            <span class="glyphicon glyphicon-print"></span>
+                        </button>
+                    </td>
+                    <td class="row_icon col_hide">
+                        <button class="btn" ng-click="editEntry(trans_index[entry.id] + trans_offset)">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>            
+        </table>
+    </form>
+</div>
+<!-- Type list form -->
+<div class="container-fluid" ng-show="!edit && show_type_list" style="margin:0;padding:0">
+    <h3>{{params["400043"].value}}</h3>
+    <hr />
+    <form name="trans_type" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button class="btn btn-block btn-warning" ng-click="returnToList()">
+                    <span class="glyphicon glyphicon-step-backward"></span> {{params["400044"].value}}
+                </button>
+            </div>
+            <div class="col-sm-10">
+            </div>
+        </div>
+        <hr />
+        <div class="form-group has-feedback {{error_code_type}}">         
+            <label for="type" class="col-sm-12">{{params["400045"].value}}</label>
+            <div class="col-sm-12">
+                <div ng-repeat="t in paramTransactionTypes| limitTo: 100 : 1">
+                    <button type="button" ng-class="checkBtnClsId(t.id, type_id)" ng-click="selectTypeId(t.id)" class="col-sm-3 button_parameter">{{t.name}}</button>
+                </div>
+            </div>
+        </div>
+        <hr />
+    </form>
+</div>
+<!-- Company list form -->
+<div class="container-fluid" ng-show="!edit && show_company_list" style="margin:0;padding:0">
+    <h3>{{params["400046"].value}}</h3>
+    <hr />    
+    <form name="trans_company" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <div class="col-sm-2 div_filter">
+                <button class="btn btn-block btn-warning" ng-click="showTypeList()">
+                    <span class="glyphicon glyphicon-chevron-left"></span> {{params["400047"].value}}
+                </button>
+            </div>
+            <div class="col-md-4 div_filter">
+                <input class="form-control" type="text" ng-model="comp_search" placeholder="Search..." />
+            </div>
+            <div class="col-md-4 div_filter">
+                <nav>
+                    <ul class="pager" style="margin:0">
+                        <li ng-class="comp_prevPageDisabled()">
+                            <a ng-click="comp_setPage(0)"><span class="glyphicon glyphicon-step-backward"></span></a>
+                        </li>
+                        <li ng-class="comp_prevPageDisabled()">
+                            <a ng-click="comp_prevPage()"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                        </li>
+                        <li ng-class="comp_nextPageDisabled()">
+                            <a ng-click="comp_nextPage()"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                        </li>
+                        <li ng-class="comp_nextPageDisabled()">
+                            <a ng-click="comp_setPage(comp_pageCount)"><span class="glyphicon glyphicon-step-forward"></span></a>
+                        </li>                        
+                    </ul>                    
+                </nav>
+            </div>
+            <div class="col-md-2">
+                <pre class="text-center" style="margin:0;padding:7px">{{comp_currentPage + 1}}/{{comp_pageCount + 1}}</pre>
+            </div>
+        </div>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="text-align:center;">{{params["200021"].value}}</th>
+                    <th>{{params["200022"].value}}</th>
+                    <th style="text-align:center;">{{params["200023"].value}}</th>
+                    <th style="text-align:center;">{{params["200024"].value}}</th>
+                    <th style="text-align:center;">{{params["200025"].value}}</th>
+                    <th style="text-align:center;margin:0">{{params["400048"].value}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in companies| filter:comp_search | limitTo: comp_itemsPerPage : (comp_currentPage * comp_itemsPerPage)" ng-model="companies">
+                    <td style="text-align:center;">{{entry.code}}</td>
+                    <td><a style="cursor:pointer;" class="btn-link" ng-click="setCompanyId(entry.id, entry.name, entry.terms_id)">{{entry.name}}</a></td>
+                    <td><a style="text-align:center; cursor:pointer;" class="btn-link" ng-click="setCompanyId(entry.id, entry.name, entry.terms_id)">{{entry.contact}}</a></td>
+                    <td style="text-align:center;">{{entry.mobile}}</td>
+                    <td style="text-align:center;">{{entry.type_name}}</td>
+                    <td class="row_icon">
+                        <button ng-class="checkBtnClsId(entry.id, company_id)" ng-click="setCompanyId(entry.id, entry.name, entry.terms_id)">
+                            <span class="glyphicon glyphicon-arrow-right"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>            
+        </table>
+    </form>
+</div>
+<div class="container-fluid" ng-show="!edit && show_item_list" style="margin:0;padding:0">
+    <h3>{{params["400049"].value}}</h3>
+    <hr />
+    <form name="trans_items" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <div class="col-sm-2 div_filter">
+                <button class="btn btn-block btn-warning" ng-click="showTransaction()">
+                    <span class="glyphicon glyphicon-chevron-left"></span> {{params["400050"].value}}
+                </button>
+            </div>
+            <div class="col-md-4 div_filter">
+                <input class="form-control" type="text" ng-model="item_search" placeholder="Search..." />
+            </div>
+            <div class="col-md-4 div_filter">
+                <nav>
+                    <ul class="pager" style="margin:0">
+                        <li ng-class="item_prevPageDisabled()">
+                            <a ng-click="item_setPage(0)"><span class="glyphicon glyphicon-step-backward"></span></a>
+                        </li>
+                        <li ng-class="item_prevPageDisabled()">
+                            <a ng-click="item_prevPage()"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                        </li>
+                        <li ng-class="item_nextPageDisabled()">
+                            <a ng-click="item_nextPage()"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                        </li>
+                        <li ng-class="item_nextPageDisabled()">
+                            <a ng-click="item_setPage(item_pageCount)"><span class="glyphicon glyphicon-step-forward"></span></a>
+                        </li>                        
+                    </ul>                    
+                </nav>
+            </div>
+            <div class="col-md-2">
+                <pre class="text-center" style="margin:0;padding:7px">{{item_currentPage + 1}}/{{item_pageCount + 1}}</pre>
+            </div>
+        </div>       
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>{{params["300011"].value}}</th>
+                    <th>{{params["300012"].value}}</th>
+                    <th class="col_hide">{{params["300013"].value}}</th>
+                    <th style="text-align:end;">{{params["300014"].value}}</th>
+                    <th style="text-align:end;">{{params["300015"].value}}</th>
+                    <th style="text-align:center;margin:0">{{params["400051"].value}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in items| filter:item_search | limitTo: item_itemsPerPage : (item_currentPage * item_itemsPerPage)" ng-model="items">
+                    <td>{{entry.code}}</td>
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="addItemId(entry.id, entry.code, entry.name, entry.amount, entry.unit_id, entry.tax_id, entry.currency_id, entry.payment_id, $index)">{{entry.name}}</a></td>
+                    <td class="col_hide">{{entry.type_name}}</td>
+                    <td style="text-align:end;">{{entry.amount| number:2}}</td>
+                    <td style="text-align:end;">{{params[entry.currency_id].name}}</td>
+                    <td class="row_icon">
+                        <button ng-class="checkBtnClsIds(entry.id, item_list)" ng-click="addItemId(entry.id, entry.code, entry.name, entry.amount, entry.unit_id, entry.tax_id, entry.currency_id, entry.payment_id, $index)">
+                            <span class="glyphicon glyphicon-arrow-right"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<div class="container-fluid" ng-show="edit" style="margin:0;padding:0">
+    <h3>{{params[type_id].name}}</h3>
+    <hr />
+    <form name="trans_form" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-warning div_filter" ng-click="backFromTransaction()">
+                    <span class="glyphicon glyphicon-step-backward"></span> {{params["400031"].value}}
+                </button>
+            </div>
+            <div class="col-sm-1">                
+            </div> 
+            <div class="col-sm-3" >
+                <select id="type" class="form-control div_filter" ng-options="p.id as p.name for p in paramTransactionTypes" ng-model="type_id" ng-change="removeAllEntries()" style="text-align:center;padding-right:0"></select>
+            </div>
+            <!-- <div class="col-sm-2">
+                <button class="btn btn-block btn-default" ng-click="" ng-disabled="!edit || error || incomplete">
+                    <span class="glyphicon glyphicon-tags"></span> {{params["400035"].value}}
+                </button>
+            </div> -->
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-default div_filter" ng-click="getStatement()">
+                    <span class="glyphicon glyphicon-list"></span> {{params["200035"].value}}
+                </button>        
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-default div_filter" ng-click="printEntry(id, type_id)" ng-disabled="!edit || error || incomplete">
+                    <span class="glyphicon glyphicon-print"></span> {{params["400034"].value}}
+                </button>
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-success div_filter" ng-click="saveEntry()">
+                    <span class="glyphicon glyphicon-save"></span> {{params["400032"].value}}
+                </button>
+            </div>
+        </div> 
+        <hr />
+        <div class="form-group has-feedback">
+            <label for="recipient" class="col-sm-1 control-label">{{params["400001"].value}}</label>
+            <div class="col-sm-5">
+                <button id="recipient" type="button" class="btn btn-block btn-default" ng-click="showCompanyList()" style="text-align:center;padding-right:0">{{company_name}}</button>
+            </div>            
+            <label for="date" class="col-sm-1 control-label">{{params["400002"].value}}</label>
+            <div class="col-sm-2">
+                <input id="date" class="form-control" type="date" ng-model="date" placeholder="Date" min="2000-01-01" required style="text-align:center;padding-right:0"/>
+            </div>
+            <label for="currency" class="col-sm-1 control-label">{{params["400006"].value}}</label>
+            <div class="col-sm-2">
+                <select id="currency" class="form-control" ng-options="p.id as p.name for p in paramTransactionCurrencies| limitTo: 100 : 1" ng-model="currency_id" ng-change="changeCurrency()" style="text-align:center;padding-right:0"></select>
+            </div>
+        </div>
+        <div class="form-group has-feedback">
+            <label for="code" class="col-sm-1 control-label">{{params["400004"].value}}</label>
+            <div class="col-sm-2">
+                <input id="code" type="text" class="form-control" ng-model="code" placeholder="Code" style="text-align:center;padding-left:0;padding-right:0" disabled/>
+            </div>
+            <div class="col-sm-3">
+                <input id="number" type="text" class="form-control" ng-model="number" placeholder="Number" style="text-align:center;padding-left:0;padding-right:0" disabled/>
+                <span class="glyphicon form-control-feedback"></span>
+            </div>
+            <label for="due_date" class="col-sm-1 control-label" ng-show="params[type_id].type_id === '409001'">{{params["400003"].value}}</label>
+            <div class="col-sm-2" ng-show="params[type_id].type_id === '409001'">
+                <input id="due_date" class="form-control" type="date" ng-model="due_date" placeholder="Due Date" min="2000-01-01" required style="text-align:center;padding-right:0"/>
+            </div>
+            <div class="col-sm-3">
+            </div>
+            <label for="tax" class="col-sm-1 control-label" ng-show="params[type_id].type_id === '409001'">{{params["400005"].value}}</label>
+            <div class="col-sm-2" ng-show="params[type_id].type_id === '409001'">
+                <select id="tax" class="form-control" ng-options="p.id as p.name for p in paramTransactionTaxAmounts" ng-model="tax_id" ng-change="setAllAmounts()" style="text-align:center;padding-right:0"></select>
+            </div>
+        </div>
+        <table class="table table-condensed" ng-show="params[type_id].type_id === '409001'">
+            <thead>
+                <tr>
+                    <th class="col-sm-1 col-xs-2" style="text-align:center;margin:0">{{params["400014"].value}}</th>
+                    <th class="col-sm-1 col-xs-2" style="text-align:center;margin:0">{{params["400015"].value}}</th>
+                    <th class="col-sm-3 col-xs-6" style="text-align:center;margin:0">{{params["400016"].value}}</th>
+                    <th class="col-sm-1 col-xs-2" style="text-align:center;margin:0">{{params["400017"].value}}</th>
+                    <th class="col-sm-1 col-xs-2 col_hide" style="text-align:center;margin:0">{{params["400018"].value}}</th>
+                    <th class="col-sm-1 col-xs-2" style="text-align:center;margin:0">{{params["400019"].value}}</th>
+                    <th class="col-sm-1 col-xs-2 col_hide" style="text-align:center;margin:0">{{params["400020"].value}}</th>
+                    <th class="col-sm-1 col-xs-2 col_hide" style="text-align:center;margin:0">{{params["400021"].value}}</th>
+                    <th class="col-sm-2 col-xs-4" style="text-align:center;margin:0">{{params["400022"].value}} {{params[currency_id].name}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in trans_entries" ng-model="trans_entries">
+                    <td class="row_icon"><button type="button" class="btn btn-default" ng-click="removeTransEntry($index)"><span class="glyphicon glyphicon-trash"></span></button></td>
+                    <td style="padding:0"><input id="code" class="form-control" type="text" ng-model="entry.code" style="text-align:center" disabled/></td>
+                    <td style="padding:0"><textarea id="description" class="form-control" rows="1" ng-model="entry.description" style="text-align:left;height:34px;margin:0;"></textarea></td>
+                    <td style="padding:0"><input id="quantity" class="form-control" type="text" ng-model="entry.quantity" ng-change="setAmounts($index)" style="text-align:center"/></td>
+                    <td class="col_hide" style="padding:0"><select id="unit" class="form-control" ng-options="p.id as p.name for p in paramQuantityUnits" ng-model="entry.unit_id" style="text-align:center"></select></td>
+                    <td style="padding:0"><input id="price" class="form-control" type="text" ng-model="entry.price" ng-change="setAmounts($index)" style="text-align:end"/></td>
+                    <td class="col_hide" style="padding:0"><input id="discount" class="form-control" type="text" ng-model="entry.discount_input" ng-change="setAmounts($index)" style="text-align:end"/></td>
+                    <td class="col_hide" style="padding:0"><select id="tax" class="form-control" ng-options="p.id as p.name for p in paramTaxRates" ng-model="entry.tax_id" ng-change="setAmounts($index)" style="text-align:end"></select></td>
+                    <td style="padding:0"><input id="amount" class="form-control" type="text" ng-value="entry.amount|number:2" style="text-align:end" disabled/></td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-condensed" ng-show="params[type_id].type_id === '409002'">
+            <thead>
+                <tr>
+                    <th class="col-sm-1" style="text-align:center;margin:0">{{params["400014"].value}}</th>
+                    <th class="col-sm-2" style="text-align:center;margin:0">{{params["400081"].value}}</th>
+                    <th class="col-sm-2" style="text-align:center;margin:0">{{params["400082"].value}}</th>
+                    <th class="col-sm-1" style="text-align:center;margin:0">{{params["400083"].value}}</th>
+                    <th class="col-sm-1" style="text-align:center;margin:0">{{params["400084"].value}}</th>
+                    <th class="col-sm-2" style="text-align:center;margin:0">{{params["400085"].value}}</th>
+                    <th class="col-sm-1" style="text-align:center;margin:0">{{params["400086"].value}}</th>
+                    <th class="col-sm-2" style="text-align:center;margin:0">{{params["400087"].value}} {{params[currency_id].name}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in trans_entries" ng-model="trans_entries">
+                    <td class="row_icon"><button type="button" class="btn btn-default" ng-click="removeTransEntry($index)"><span class="glyphicon glyphicon-trash"></span></button></td>
+                    <td style="padding:0"><select id="payment" class="form-control" ng-options="p.id as p.name for p in paramTransactionPayments" ng-model="entry.payment_id" style="text-align:center"></select></td>
+                    <td style="padding:0"><input id="code" class="form-control" type="text" ng-model="entry.code" style="text-align:center"/></td>
+                    <td style="padding:0"><input id="date" class="form-control" type="date" ng-model="entry.date" style="text-align:center;padding-right:0"/></td>
+                    <td style="padding:0"><select id="currency" class="form-control" ng-options="p.id as p.name for p in paramTransactionCurrencies" ng-model="entry.currency_id" ng-change="setAmounts($index)" style="text-align:center"></select></td>
+                    <td style="padding:0"><input id="price" class="form-control" type="text" ng-model="entry.price" ng-change="setAmounts($index)" style="text-align:end"/></td>
+                    <td style="padding:0"><input id="quantity" class="form-control" type="text" ng-model="entry.quantity" ng-change="setAmounts($index)" style="text-align:center"/></td>
+                    <td style="padding:0"><input id="amount" class="form-control" type="text" ng-value="entry.amount|number:2" style="text-align:end" disabled/></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="form-group" style="margin-bottom:2px">
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-info" ng-click="showItemList()">
+                    <span class="glyphicon glyphicon-plus"></span> {{params["400033"].value}}
+                </button>
+            </div>
+            <div class="col-sm-1">
+            </div>
+            <label for="quantity" class="col-sm-2 control-label">{{params["400023"].value}}</label>
+            <div class="col-sm-2">
+                <input id="quantity" type="text" class="form-control" ng-value="quantity" style="text-align:center;" disabled/>
+            </div>
+            <label for="price" class="col-sm-2 control-label" style="text-align:end;">{{params["400007"].value}}</label>
+            <div class="col-sm-3">
+                <input id="price" type="text" class="form-control" ng-value="price|number:2" style="text-align:end;" disabled/>
+            </div>            
+        </div>
+        <div class="form-group" style="margin-bottom:2px" ng-show="params[type_id].type_id === '409001'">
+            <div class="col-sm-3">
+            </div>
+            <label for="discount_input" class="col-sm-2 control-label" style="text-align:end;">{{params["400008"].value}}</label>
+            <div class="col-sm-2">
+                <input id="discount_input" type="text" class="form-control" ng-model="discount_input" ng-value="discount_input|number:2" ng-change="setTotalAmounts()" style="text-align:end;"/>
+            </div>
+            <label for="discount" class="col-sm-2 control-label" style="text-align:end;">{{params["400009"].value}}</label>
+            <div class="col-sm-3">
+                <input id="discount" type="text" class="form-control" ng-value="discount|number:2" style="text-align:end;" disabled/>
+            </div>        
+        </div>
+        <div class="form-group" style="margin-bottom:2px" ng-show="params[type_id].type_id === '409001'">
+            <div class="col-sm-7">
+            </div>
+            <label for="subtotal" class="col-sm-2 control-label" style="text-align:end;">{{params["400010"].value}}</label>
+            <div class="col-sm-3">
+                <input id="subtotal" type="text" class="form-control" ng-value="subtotal|number:2" style="text-align:end;" disabled/>
+            </div>
+        </div>
+        <div class="form-group" style="margin-bottom:2px">            
+            <div class="col-sm-3">
+            </div>
+            <label for="tax_input" class="col-sm-2 control-label" style="text-align:end;">{{params["400011"].value}}</label>
+            <div class="col-sm-2">
+                <input id="tax_input" type="text" class="form-control" ng-value="tax_input" style="text-align:end;" disabled/>
+            </div>
+            <label for="tax" class="col-sm-2 control-label" style="text-align:end;">{{params["400012"].value}}</label>
+            <div class="col-sm-3">
+                <input id="tax" type="text" class="form-control" ng-value="tax|number:2" style="text-align:end;" disabled/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="balance_old" class="col-sm-2 control-label" style="text-align:start;">{{params["400025"].value}} ({{params[currency_id].name}})</label>
+            <div class="col-sm-2">
+                <input id="balance_old" type="text" class="form-control" style="text-align:end;" ng-value="account_balance|number:2" disabled/>
+            </div>
+            <div class="col-sm-1">
+            </div>
+            <label for="nettotal" class="col-sm-4 control-label" style="text-align:end;" ng-show="params[type_id].type_id === '409001'">{{params["400013"].value}} {{params[currency_id].name}}</label>
+            <label for="nettotal" class="col-sm-4 control-label" style="text-align:end;" ng-show="params[type_id].type_id === '409002'">{{params["400088"].value}} {{params[currency_id].name}}</label>
+            <div class="col-sm-3">
+                <input id="nettotal" type="text" class="form-control" ng-value="nettotal|number:2" style="text-align:end;" disabled/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="balance_new" class="col-sm-2 control-label" style="text-align:start;">{{params["400026"].value}} ({{params[currency_id].name}})</label>
+            <div class="col-sm-2">
+                <input id="balance_new" type="text" class="form-control" style="text-align:end;" ng-value="balance|number:2" disabled/>
+            </div>
+            <div class="col-sm-1">
+            </div>
+            <div class="col-sm-7">
+                <textarea id="note" class="form-control" rows="3" ng-model="note" placeholder="{{params['400024'].description}}" ></textarea>
+            </div>
+        </div>
+    </form>    
+</div>
+<!-- Modal Message Dialog --> 
+<div id="messageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{msg_title}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{msg_body}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

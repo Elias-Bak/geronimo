@@ -1,0 +1,184 @@
+<div class="container-fluid" ng-hide="edit" style="margin:0;padding:0">
+    <h3>{{params["100008"].value}}</h3>
+    <hr />
+    <form role="form" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 div_filter">
+                <button type="button" class="btn btn-block btn-primary" ng-click="newEntry()">
+                    <span class="glyphicon glyphicon-plus"></span> {{params["200031"].value}}
+                </button>
+            </div>            
+            <div class="col-sm-4 div_filter">
+                <input class="form-control" type="text" ng-model="search" placeholder="{{params['200032'].value}}" />
+            </div>
+            <div class="col-sm-4 div_filter">
+                <nav>
+                    <ul class="pager" style="margin:0">
+                        <li ng-class="prevPageDisabled()">
+                            <a ng-click="setPage(0)"><span class="glyphicon glyphicon-step-backward"></span></a>
+                        </li>
+                        <li ng-class="prevPageDisabled()">
+                            <a ng-click="prevPage()"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                        </li>
+                        <li ng-class="nextPageDisabled()">
+                            <a ng-click="nextPage()"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                        </li>
+                        <li ng-class="nextPageDisabled()">
+                            <a ng-click="setPage(pageCount)"><span class="glyphicon glyphicon-step-forward"></span></a>
+                        </li>                        
+                    </ul>                    
+                </nav>
+            </div>
+            <div class="col-sm-2">
+                <pre class="text-center" style="margin:0;padding:7px">{{currentPage + 1}}/{{pageCount + 1}}</pre>
+            </div>            
+        </div>    
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="text-align:center;">{{params["200021"].value}}</th>
+                    <th>{{params["200022"].value}}</th>
+                    <th class="col_hide">{{params["200023"].value}}</th>
+                    <th style="text-align:center;">{{params["200024"].value}}</th>
+                    <th class="col_hide" style="text-align:center;">{{params["200025"].value}}</th>
+                    <th class="col_hide" style="text-align:center;">{{params["200026"].value}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in entries| filter:search | limitTo: itemsPerPage : (currentPage * itemsPerPage)" ng-model="entries">
+                    <td style="text-align:center;">{{entry.code}}</td>
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="editEntry(entry_index[entry.id])">{{entry.name}}</a></td>
+                    <td class="col_hide">{{entry.contact}}</td>
+                    <td style="text-align:center;">{{entry.mobile}}</td>
+                    <td class="col_hide" style="text-align:center;">{{entry.type_name}}</td>
+                    <td class="row_icon col_hide">
+                        <button type="button" class="btn" ng-click="editEntry(entry_index[entry.id])">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>            
+        </table>
+    </form>
+</div>
+<div class="container-fluid" ng-show="edit" style="margin:0;padding:0">
+    <h3>{{params["100008"].value}}</h3>
+    <hr />
+    <form role="form" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-warning div_filter" ng-click="returnToList()">
+                    <span class="glyphicon glyphicon-step-backward"></span> {{params["200033"].value}}
+                </button>
+            </div>
+            <div class="col-sm-3">
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-default div_filter" ng-click="getHistory()" ng-hide="create" ng-disabled="!edit || error || incomplete">
+                    <span class="glyphicon glyphicon-list"></span> {{params["200035"].value}}
+                </button>        
+            </div>
+            <div class="col-sm-3">
+            </div>        
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-success div_filter" ng-click="saveEntry()" ng-disabled="!edit || error || incomplete">
+                    <span class="glyphicon glyphicon-save"></span> {{params["200034"].value}}
+                </button>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group has-feedback {{error_code_type}}">
+            <label for="code" class="col-sm-2 control-label">{{params["200001"].value}}</label>
+            <div class="col-sm-4">
+                <input id="code" type="text" class="form-control" ng-model="code" placeholder="Company Code" />
+                <span class="glyphicon form-control-feedback {{error_code_sign}}"></span>
+            </div>            
+            <label for="type" class="col-sm-2 control-label">{{params["200003"].value}}</label>
+            <div class="col-sm-4">
+                <select id="type" class="form-control" ng-options="p.id as p.name for p in paramCompanyTypes" ng-model="type_id"></select>
+            </div>
+        </div>
+        <div class="form-group has-feedback {{error_name_type}}">
+            <label for="name" class="col-sm-2 control-label">{{params["200002"].value}}</label>
+            <div class="col-sm-10">
+                <input id="name" class="form-control" type="text" ng-model="name" placeholder="Company Name" />
+                <span class="glyphicon form-control-feedback {{error_name_sign}}"></span>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="contact" class="col-sm-2 control-label">{{params["200004"].value}}</label>
+            <div class="col-sm-4">
+                <input id="contact" class="form-control" type="text" ng-model="contact" placeholder="Contact Person" />
+            </div>
+            <label for="terms" class="col-sm-2 control-label">{{params["200013"].value}}</label>
+            <div class="col-sm-4">
+                <select id="terms" class="form-control" ng-options="p.id as p.name for p in paramDueDateTerms" ng-model="terms_id"></select>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="address" class="col-sm-2 control-label">{{params["200005"].value}}</label>
+            <div class="col-sm-10">
+                <input id="address" class="form-control" type="text" ng-model="address" placeholder="Address" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="city" class="col-sm-2 control-label">{{params["200006"].value}}</label>
+            <div class="col-sm-4">
+                <input id="city" class="form-control" type="text" ng-model="city" placeholder="City" />
+            </div>
+            <label for="country" class="col-sm-2 control-label">{{params["200007"].value}}</label>
+            <div class="col-sm-4">
+                <select id="country" class="form-control" ng-options="p.id as p.name for p in paramBranchCountries" ng-model="country_id"></select>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="email" class="col-sm-2 control-label">{{params["200008"].value}}</label>
+            <div class="col-sm-4">
+                <input id="email" class="form-control" type="text" ng-model="email" placeholder="Email" />
+            </div>
+            <label for="website" class="col-sm-2 control-label">{{params["200009"].value}}</label>
+            <div class="col-sm-4">
+                <input id="website" class="form-control" type="text" ng-model="website" placeholder="Website" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="mobile" class="col-sm-2 control-label">{{params["200010"].value}}</label>
+            <div class="col-sm-4">
+                <input id="mobile" class="form-control" type="text" ng-model="mobile" placeholder="Mobile" />
+            </div>
+            <label for="phone" class="col-sm-2 control-label">{{params["200011"].value}}</label>
+            <div class="col-sm-4">
+                <input id="phone" class="form-control" type="text" ng-model="phone" placeholder="Phone" />
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="note" class="col-sm-2 control-label">{{params["200012"].value}}</label>
+            <div class="col-sm-10">
+                <textarea id="note" class="form-control" rows="3" ng-model="note" placeholder="Notes / Comments" ></textarea>
+            </div>
+        </div>
+        <hr />
+    </form>
+</div>
+<!-- Modal Message Dialog -->
+<div id="messageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{msg_title}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{msg_body}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

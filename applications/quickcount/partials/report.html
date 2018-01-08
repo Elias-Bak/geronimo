@@ -1,0 +1,467 @@
+<!-- Reports -->
+<div class="container-fluid" ng-show="show_report_list" style="margin:0;padding:0">
+    <h3>{{params["100011"].value}}</h3>
+    <hr />
+    <form name="parameter_groups" role="form" class="form-horizontal" novalidate>
+        <div class="form-group has-feedback {{error_code_type}}">
+            <div ng-repeat="t in paramReportsLabels| limitTo: 100 : 1">
+                <div class="btn-group btn-group-justified" role="group">
+                    <div class="col-sm-4">
+                        <button class="btn btn-block btn-primary" ng-click="showSelectedReport(t.id)">{{t.value}}</button>
+                    </div>
+                    <div class="col-sm-8 reports_desc"><pre>{{t.description}}</pre></div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </form>
+</div>
+<!-- Report 500001: contacts balances -->
+<div class="container-fluid" ng-show="!show_report_list && (report_id === 500001)" style="margin:0;padding:0">
+    <h3>{{report_title}}</h3>
+    <hr />
+    <form name="trans_list" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-warning margin_bottom" ng-click="showReportList()">
+                    <span class="glyphicon glyphicon-chevron-left"></span> {{params['510021'].value}}
+                </button>
+            </div>
+            <div class="col-sm-3">
+                <select id="type" class="form-control margin_bottom" ng-options="p.id as p.name for p in paramCompanyTypes" ng-model="comp_type_id" ng-change="search()" style="text-align:center;padding-right:0"></select>
+            </div>
+            <div class="col-sm-2">
+                <input class="form-control margin_bottom" type="text" ng-model="comp_code" placeholder="{{params['510011'].value}}" style="text-align:center;"/>
+                <input class="form-control margin_bottom" type="text" ng-model="comp_id" placeholder="{{params['510013'].value}}" style="text-align:center;"/>
+            </div>            
+            <div class="col-sm-3">
+                <input class="form-control margin_bottom" type="text" ng-model="comp_name" placeholder="{{params['510014'].value}}" />
+                <div class="input-group margin_bottom">
+                    <span class="input-group-addon">
+                        <input type="checkbox" ng-model="zero_balance" ng-change="search()" />
+                    </span>
+                    <input class="form-control" type="text" placeholder="{{params['510015'].value}}" style="text-align:center;" disabled/>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-block btn-info margin_bottom" ng-click="search()">
+                    <span class="glyphicon glyphicon-search"></span> {{params['510022'].value}}
+                </button>
+                <button type="button" class="btn btn-block btn-default" ng-click="printList()">
+                    <span class="glyphicon glyphicon-print"></span> {{params['510023'].value}}
+                </button>
+            </div>
+        </div>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th ng-repeat="entry in table_header[report_id]" style="text-align:{{entry.align}}" class="{{entry.class}}">
+                        {{entry.value}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in entries" ng-model="entries">
+                    <td style="text-align:center;">{{entry.company_code}}</td>
+                    <td class="col_hide">{{entry.company_type}}</td>
+                    <td style="text-align:center;" class="col_hide">{{entry.company_id}}</td>
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="printStatement(entry.company_id, entry.currency_id, entry.ledger_id)">{{entry.company_name}}</a></td>
+                    <td style="text-align:end;">{{entry.balance| number:2}}</td>
+                    <td style="text-align:center;">{{entry.currency_name}}</td>
+                    <td class="row_icon col_hide">
+                        <button class="btn" ng-click="printStatement(entry.company_id, entry.currency_id, entry.ledger_id)">
+                            <span class="glyphicon glyphicon-print"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr ng-repeat="(currency_name, entry) in totals">
+                    <td></td>
+                    <td class="col_hide"></td>
+                    <td class="col_hide"></td>
+                    <td><strong>{{totals_desc}}</strong></td>
+                    <td style="text-align:end;"><strong>{{entry.balance| number:2}}</strong></td>
+                    <td style="text-align:center;"><strong>{{currency_name}}</strong></td>
+                    <td class="col_hide"></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<!-- Report 500002: transactions orders -->
+<div class="container-fluid" ng-show="!show_report_list && (report_id === 500002)" style="margin:0;padding:0">
+    <h3>{{report_title}}</h3>
+    <hr />
+    <form name="trans_list" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-warning margin_bottom" ng-click="showReportList()">
+                    <span class="glyphicon glyphicon-chevron-left"></span> {{params['520021'].value}}
+                </button>
+                <label for="trans_date_from" class="control-label margin_bottom label_block">{{params["520013"].value}}</label>
+            </div>
+            <div class="col-sm-3">
+                <select id="type" class="form-control margin_bottom" ng-options="p.id as p.name for p in paramTransactionTypes" ng-model="trans_type_id" ng-change="search()" style="text-align:center;padding-right:0"></select>
+                <input id="trans_date_from" class="form-control margin_bottom" type="date" ng-model="trans_date_from" value="{{trans_date_from}}" min="2000-01-01" style="text-align:center;padding-right:0"/>
+            </div>
+            <div class="col-sm-2">
+                <input class="form-control margin_bottom" type="text" ng-model="trans_number" placeholder="{{params['520015'].value}}" style="text-align:center;"/>
+                <label for="trans_date_to" class="control-label margin_bottom label_block">{{params["520014"].value}}</label>
+            </div>
+            <div class="col-sm-3">
+                <input class="form-control margin_bottom" type="text" ng-model="comp_name" placeholder="{{params['520011'].value}}" />
+                <input id="trans_date_to" class="form-control margin_bottom" type="date" ng-model="trans_date_to" min="2000-01-01" style="text-align:center;padding-right:0"/>
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-block btn-info margin_bottom" ng-click="search()">
+                    <span class="glyphicon glyphicon-search"></span> {{params['520022'].value}}
+                </button>
+                <button type="button" class="btn btn-block btn-default" ng-click="printList()">
+                    <span class="glyphicon glyphicon-print"></span> {{params['520023'].value}}
+                </button>
+            </div>
+        </div>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th ng-repeat="entry in table_header[report_id]" style="text-align:{{entry.align}}" class="{{entry.class}}">
+                        {{entry.value}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in entries" ng-model="entries">
+                    <td style="text-align:center;">{{entry.date}}</td>
+                    <td style="text-align:center;">{{entry.type_name}}</td>
+                    <td style="text-align:center;" class="col_hide">{{entry.number}}</td>
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="printOrder(entry.id)">{{entry.company_name}}</a></td>
+                    <td style="text-align:end;">{{entry.nettotal| number:2}}</td>
+                    <td style="text-align:center;">{{entry.currency_name}}</td>
+                    <td class="row_icon col_hide">
+                        <button class="btn" ng-click="printOrder(entry.id)">
+                            <span class="glyphicon glyphicon-print"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-repeat="(type_name, entry) in totals">
+                <tr ng-repeat="(currency_name, amount) in entry">
+                    <td></td>
+                    <td></td>
+                    <td class="col_hide"></td>
+                    <td><strong>{{totals_desc}} ({{type_name}} - {{currency_name}})</strong></td>
+                    <td style="text-align:end;"><strong>{{amount| number:2}}</strong></td>
+                    <td style="text-align:center;"><strong>{{currency_name}}</strong></td>
+                    <td class="col_hide"></td>
+                </tr>                
+            </tbody>
+        </table>
+    </form>
+</div>
+<!-- Report 500003: accounts balances -->
+<div class="container-fluid" ng-show="!show_report_list && (report_id === 500003)" style="margin:0;padding:0">
+    <h3>{{report_title}}</h3>
+    <hr />
+    <form name="trans_list" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-warning margin_bottom" ng-click="showReportList()">
+                    <span class="glyphicon glyphicon-chevron-left"></span> {{params['530021'].value}}
+                </button>
+            </div>
+            <div class="col-sm-3">
+            </div>
+            <div class="col-sm-2">
+                <input class="form-control margin_bottom" type="text" ng-model="trans_ledger" placeholder="{{params['530011'].value}}" style="text-align:center;"/>
+            </div>
+            <div class="col-sm-3">
+                <input class="form-control margin_bottom" type="text" ng-model="trans_account" placeholder="{{params['530012'].value}}" />
+            </div>            
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-block btn-info margin_bottom" ng-click="search()">
+                    <span class="glyphicon glyphicon-search"></span> {{params['530022'].value}}
+                </button>
+                <button type="button" class="btn btn-block btn-default" ng-click="printList()">
+                    <span class="glyphicon glyphicon-print"></span> {{params['530023'].value}}
+                </button>
+            </div>
+        </div>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th ng-repeat="entry in table_header[report_id]" style="text-align:{{entry.align}}" class="{{entry.class}}">
+                        {{entry.value}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in entries" ng-model="entries">
+                    <td style="text-align:center;">{{entry.account_code}}</td>
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="printStatement(entry.company_id, entry.currency_id, entry.ledger_id)">{{entry.account_name}}</a></td>
+                    <td style="text-align:end;">{{entry.balance| number:2}}</td>
+                    <td style="text-align:center;">{{entry.currency_name}}</td>
+                    <td class="row_icon col_hide">
+                        <button class="btn" ng-click="printStatement(entry.company_id, entry.currency_id, entry.ledger_id)">
+                            <span class="glyphicon glyphicon-print"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr ng-repeat="(currency_name, entry) in totals">
+                    <td></td>
+                    <td><strong>{{totals_desc}}</strong></td>
+                    <td style="text-align:end;"><strong>{{entry.balance| number:2}}</strong></td>
+                    <td style="text-align:center;"><strong>{{currency_name}}</strong></td>
+                    <td class="col_hide"></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<!-- Report 500004: journal -->
+<div class="container-fluid" ng-show="!show_report_list && (report_id === 500004)" style="margin:0;padding:0">
+    <h3>{{report_title}}</h3>
+    <hr />
+    <form name="trans_list" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-warning margin_bottom" ng-click="showReportList()">
+                    <span class="glyphicon glyphicon-chevron-left"></span> {{params['540021'].value}}
+                </button>
+                <label for="trans_date_from" class="control-label margin_bottom label_block">{{params["540013"].value}}</label>
+            </div>
+            <div class="col-sm-3">
+                <select id="type" class="form-control margin_bottom" ng-options="p.id as p.name for p in paramTransactionTypes" ng-model="trans_type_id" ng-change="search()" style="text-align:center;padding-right:0"></select>
+                <input id="trans_date_from" class="form-control margin_bottom" type="date" ng-model="trans_date_from" value={{trans_date_from}} min="2000-01-01" style="text-align:center;padding-right:0"/>
+            </div>
+            <div class="col-sm-2">
+                <input class="form-control margin_bottom" type="text" ng-model="trans_number" placeholder="{{params['540015'].value}}" style="text-align:center;"/>
+                <label for="trans_date_to" class="control-label margin_bottom label_block">{{params['540014'].value}}</label>
+                <input class="form-control margin_bottom" type="text" ng-model="trans_ledger" placeholder="{{params['540016'].value}}" style="text-align:center;"/>
+            </div>
+            <div class="col-sm-3">
+                <input class="form-control margin_bottom" type="text" ng-model="comp_name" placeholder="{{params['540011'].value}}" />
+                <input id="trans_date_to" class="form-control margin_bottom" type="date" ng-model="trans_date_to" min="2000-01-01" style="text-align:center;padding-right:0"/>
+                <input class="form-control margin_bottom" type="text" ng-model="trans_account" placeholder="{{params['540017'].value}}" />
+            </div>  
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-block btn-info margin_bottom" ng-click="search()">
+                    <span class="glyphicon glyphicon-search"></span> {{params['540022'].value}}
+                </button>
+                <button type="button" class="btn btn-block btn-default" ng-click="printList()">
+                    <span class="glyphicon glyphicon-print"></span> {{params['540023'].value}}
+                </button>
+            </div>
+        </div>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th ng-repeat="entry in table_header[report_id]" style="text-align:{{entry.align}}" class="{{entry.class}}">
+                        {{entry.value}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in entries">
+                    <td style="text-align:center;">{{entry.date}}</td>
+                    <td style="text-align:center;" class="col_hide">{{entry.type_name}}</td>
+                    <td style="text-align:center;" class="col_hide">{{entry.number}}</td>
+                    <td class="col_hide"><a style="cursor: pointer;" class="btn-link" ng-click="printOrder(entry.order_id)">{{entry.company_name}}</a></td>
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="printOrder(entry.order_id)">{{entry.account_code}} {{entry.account_name}}</a></td>
+                    <td style="text-align:center;">{{entry.currency_name}}</td>
+                    <td style="text-align:end;" ng-show="(entry.debit != 0)">{{entry.debit| number:2}}</td>
+                    <td style="text-align:end;" ng-show="(entry.debit == 0)"></td>
+                    <td style="text-align:end;" ng-show="(entry.credit != 0)">{{entry.credit| number:2}}</td>
+                    <td style="text-align:end;" ng-show="(entry.credit == 0)"></td>   
+                    <td class="row_icon col_hide">
+                        <button class="btn" ng-click="printOrder(entry.order_id)" ng-show="(entry.company_id > 0)">
+                            <span class="glyphicon glyphicon-print"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr ng-repeat="(currency_name, entry) in totals">
+                    <td></td>
+                    <td class="col_hide"></td>
+                    <td class="col_hide"></td>
+                    <td class="col_hide"></td>
+                    <td><strong>{{totals_desc}}</strong></td>
+                    <td style="text-align:center;"><strong>{{currency_name}}</strong></td>
+                    <td style="text-align:end;" ng-show="(entry.debit != 0)"><strong>{{entry.debit| number:2}}</strong></td>
+                    <td style="text-align:end;" ng-show="(entry.debit == 0)"></td>
+                    <td style="text-align:end;" ng-show="(entry.credit != 0)"><strong>{{entry.credit| number:2}}</strong></td>
+                    <td style="text-align:end;" ng-show="(entry.credit == 0)"></td>
+                    <td class="col_hide"></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<!-- Report 500005: inventory -->
+<div class="container-fluid" ng-show="!show_report_list && (report_id === 500005)" style="margin:0;padding:0">
+    <h3>{{report_title}}</h3>
+    <hr />
+    <form name="trans_list" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-warning margin_bottom" ng-click="showReportList()">
+                    <span class="glyphicon glyphicon-chevron-left"></span> {{params['550021'].value}}
+                </button>
+                <label for="trans_date_from" class="control-label margin_bottom label_block">{{params['550013'].value}}</label>
+            </div>
+            <div class="col-sm-3">
+                <select id="type" class="form-control margin_bottom" ng-options="p.id as p.name for p in paramItemTypes" ng-model="trans_type_id" ng-change="search()" style="text-align:center;padding-right:0"></select>
+                <input id="trans_date_from" class="form-control margin_bottom" type="date" ng-model="trans_date_from" value="{{trans_date_from}}" min="2000-01-01" style="text-align:center;padding-right:0"/>
+            </div>
+            <div class="col-sm-2">
+                <input class="form-control margin_bottom" type="text" ng-model="item_code" placeholder="{{params['550016'].value}}" style="text-align:center;"/>
+                <label for="trans_date_to" class="control-label margin_bottom label_block">{{params['550014'].value}}</label>
+            </div>
+            <div class="col-sm-3">
+                <input class="form-control margin_bottom" type="text" ng-model="item_name" placeholder="{{params['550017'].value}}" />
+                <input id="trans_date_to" class="form-control margin_bottom" type="date" ng-model="trans_date_to" min="2000-01-01" style="text-align:center;padding-right:0"/>
+            </div>            
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-block btn-info" ng-click="search()">
+                    <span class="glyphicon glyphicon-search"></span> {{params['550022'].value}}
+                </button>
+                <button type="button" class="btn btn-block btn-default margin_bottom" ng-click="printList()">
+                    <span class="glyphicon glyphicon-print"></span> {{params['550023'].value}}
+                </button>
+            </div>
+        </div>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th ng-repeat="entry in table_header[report_id]" style="text-align:{{entry.align}}" class="{{entry.class}}">
+                        {{entry.value}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in entries" ng-model="entries">
+                    <td class="col_hide">{{entry.account_code}} {{entry.account_name}}</td>
+                    <td style="text-align:center;">{{entry.item_code}}</td>
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="printItemHistory(entry.item_id, entry.currency_id)">{{entry.item_name}}</a></td>
+                    <td style="text-align:center;">{{entry.quantity| number:0}}</td> <!-- {{entry.unit_name}} -->
+                    <td style="text-align:end;">{{entry.currency_name}} {{entry.balance| number:2}}</td>
+                    <td class="row_icon col_hide">
+                        <button class="btn" ng-click="printItemHistory(entry.item_id, entry.currency_id)">
+                            <span class="glyphicon glyphicon-print"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr ng-repeat="(currency_name, entry) in totals">
+                    <td class="col_hide"></td>
+                    <td></td>
+                    <td><strong>{{totals_desc}}</strong></td>
+                    <td style="text-align:center;"><strong>{{entry.quantity| number:0}}</strong></td>
+                    <td style="text-align:end;"><strong>{{currency_name}} {{entry.balance| number:2}}</strong></td>
+                    <td class="col_hide"></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<!-- Report 500006: movements -->
+<div class="container-fluid" ng-show="!show_report_list && (report_id === 500006)" style="margin:0;padding:0">
+    <h3>{{report_title}}</h3>
+    <hr />
+    <form name="trans_list" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-warning margin_bottom" ng-click="showReportList()">
+                    <span class="glyphicon glyphicon-chevron-left"></span> {{params["560021"].value}}
+                </button>
+                <label for="trans_date_from" class="control-label margin_bottom label_block">{{params["560013"].value}}</label>
+            </div>
+            <div class="col-sm-3">
+                <select id="type" class="form-control margin_bottom" ng-options="p.id as p.name for p in paramTransactionTypes" ng-model="trans_type_id" ng-change="search()" style="text-align:center;padding-right:0"></select>
+                <input id="trans_date_from" class="form-control margin_bottom" type="date" ng-model="trans_date_from" value="{{trans_date_from}}" min="2000-01-01" style="text-align:center;padding-right:0"/>
+            </div>
+            <div class="col-sm-2">
+                <input class="form-control margin_bottom" type="text" ng-model="trans_number" placeholder="{{params['560015'].value}}" style="text-align:center;"/>
+                <label for="trans_date_to" class="control-label margin_bottom label_block">{{params["560014"].value}}</label>
+                <input class="form-control margin_bottom" type="text" ng-model="item_code" placeholder="{{params['560016'].value}}" style="text-align:center;"/>
+            </div>
+            <div class="col-sm-3">
+                <input class="form-control margin_bottom" type="text" ng-model="comp_name" placeholder="{{params['560011'].value}}" />                
+                <input id="trans_date_to" class="form-control margin_bottom" type="date" ng-model="trans_date_to" min="2000-01-01" style="text-align:center;padding-right:0"/>
+                <input class="form-control margin_bottom" type="text" ng-model="item_name" placeholder="{{params['560017'].value}}" />
+            </div>            
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-block btn-info" ng-click="search()">
+                    <span class="glyphicon glyphicon-search"></span> {{params['560022'].value}}
+                </button>
+                <button type="button" class="btn btn-block btn-default" ng-click="printList()">
+                    <span class="glyphicon glyphicon-print"></span> {{params["560023"].value}}
+                </button>
+            </div>
+        </div>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th ng-repeat="entry in table_header[report_id]" style="text-align:{{entry.align}}" class="{{entry.class}}">
+                        {{entry.value}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in entries" ng-model="entries">
+                    <td style="text-align:center;">{{entry.date}}</td>
+                    <td style="text-align:center;" class="col_hide">{{entry.type_name}}</td>
+                    <td style="text-align:center;" class="col_hide">{{entry.number}}</td>
+                    <td class="col_hide"><a style="cursor: pointer;" class="btn-link" ng-click="printOrder(entry.order_id)">{{entry.company_name}}</a></td>
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="printOrder(entry.order_id)">{{entry.item_code}}: {{entry.item_name}}</a></td>
+                    <td style="text-align:center;">{{entry.quantity| number:0}} {{entry.unit_name}}</td>
+                    <td style="text-align:end;">{{entry.currency_name}} {{entry.nettotal| number:2}}</td>
+                    <td class="row_icon col_hide">
+                        <button class="btn" ng-click="printOrder(entry.order_id)">
+                            <span class="glyphicon glyphicon-print"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-repeat="(type, entry) in totals">
+                <tr ng-repeat="(currency, amount) in entry">
+                    <td></td>
+                    <td class="col_hide"></td>
+                    <td class="col_hide"></td>
+                    <td class="col_hide"></td>
+                    <td><strong>{{totals_desc}} ({{type}} - {{currency}})</strong></td>
+                    <td style="text-align:center;"><strong>{{amount.quantity| number:0}}</strong></td>
+                    <td style="text-align:end;"><strong>{{currency}} {{amount.nettotal| number:2}}</strong></td>
+                    <td class="col_hide"></td>
+                </tr>                
+            </tbody>
+        </table>
+    </form>
+</div>
+<!-- Modal Message Dialog --> 
+<div id="messageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{msg_title}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{msg_body}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

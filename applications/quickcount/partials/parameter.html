@@ -1,0 +1,282 @@
+<!-- General Parameters -->
+<div class="container-fluid" ng-show="!edit && !show_param_list" style="margin:0;padding:0">
+    <h4>General Parameters</h4>
+    <form name="parameter_groups" role="form" class="form-horizontal" novalidate>
+        <div class="form-group has-feedback {{error_code_type}}">
+            <div class="btn-group btn-group-justified" role="group">
+                <div ng-repeat="t in groups_by_cat[1]">
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-block btn-default button_parameter" ng-click="showParameterList(t.id)">{{t.name}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </form>
+</div>
+<!-- Account Parameters -->
+<div class="container-fluid" ng-show="!edit && !show_param_list" style="margin:0;padding:0">
+    <h4>Account Parameters</h4>
+    <form name="parameter_groups" role="form" class="form-horizontal" novalidate>
+        <div class="form-group has-feedback {{error_code_type}}">            
+            <div class="btn-group btn-group-justified" role="group">
+                <div ng-repeat="t in groups_by_cat[2]">
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-block btn-info button_parameter" ng-click="showParameterList(t.id)">{{t.name}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </form>
+</div>
+<!-- Item Parameters -->
+<div class="container-fluid" ng-show="!edit && !show_param_list" style="margin:0;padding:0">
+    <h4>Item Parameters</h4>
+    <form name="parameter_groups" role="form" class="form-horizontal" novalidate>
+        <div class="form-group has-feedback {{error_code_type}}">            
+            <div class="btn-group btn-group-justified" role="group">
+                <div ng-repeat="t in groups_by_cat[3]">
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-block btn-warning button_parameter" ng-click="showParameterList(t.id)">{{t.name}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </form>
+</div>
+<!-- Transaction Parameters -->
+<div class="container-fluid" ng-show="!edit && !show_param_list" style="margin:0;padding:0">
+    <h4>Transaction Parameters</h4>
+    <form name="parameter_groups" role="form" class="form-horizontal" novalidate>
+        <div class="form-group has-feedback {{error_code_type}}">            
+            <div class="btn-group btn-group-justified" role="group">
+                <div ng-repeat="t in groups_by_cat[4]">
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-block btn-success button_parameter" ng-click="showParameterList(t.id)">{{t.name}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </form>
+</div>
+<!-- Reports Parameters -->
+<div class="container-fluid" ng-show="!edit && !show_param_list" style="margin:0;padding:0">
+    <h4>Reports Parameters</h4>
+    <form name="parameter_groups" role="form" class="form-horizontal" novalidate>
+        <div class="form-group has-feedback {{error_code_type}}">
+            <div class="btn-group btn-group-justified" role="group">
+                <div ng-repeat="t in groups_by_cat[5]">
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-block button_parameter" ng-click="showParameterList(t.id)">{{t.name}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </form>
+</div>
+<!-- Parameter list -->
+<div class="container-fluid" ng-show="!edit && show_param_list" style="margin:0;padding:0">
+    <h3>{{groups_by_id[group_id].name}}</h3>
+    <hr />    
+    <form name="parameters_list" role="form" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <div class="col-sm-2 div_filter">
+                <button type="button" class="btn btn-block btn-warning" ng-click="showGroupList()">
+                    <span class="glyphicon glyphicon-chevron-left"></span> {{params["100048"].value}}
+                </button>
+            </div>
+            <div class="col-sm-2 div_filter">
+                <button type="button" class="btn btn-block btn-primary" ng-click="newEntry()">
+                    <span class="glyphicon glyphicon-plus"></span> {{params["100046"].value}}
+                </button>
+            </div>   
+            <div class="col-md-2 div_filter">
+                <input class="form-control" type="text" ng-model="search" placeholder="Search..." />
+            </div>
+            <div class="col-md-4 div_filter">
+                <nav>
+                    <ul class="pager" style="margin:0">
+                        <li ng-class="prevPageDisabled()">
+                            <a ng-click="setPage(0)"><span class="glyphicon glyphicon-step-backward"></span></a>
+                        </li>
+                        <li ng-class="prevPageDisabled()">
+                            <a ng-click="prevPage()"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                        </li>
+                        <li ng-class="nextPageDisabled()">
+                            <a ng-click="nextPage()"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                        </li>
+                        <li ng-class="nextPageDisabled()">
+                            <a ng-click="setPage(pageCount)"><span class="glyphicon glyphicon-step-forward"></span></a>
+                        </li>                        
+                    </ul>                    
+                </nav>
+            </div>
+            <div class="col-md-2">
+                <pre class="text-center" style="margin:0;padding:7px">{{currentPage + 1}}/{{pageCount + 1}}</pre>
+            </div>
+        </div>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>{{params["100031"].value}}</th>
+                    <th>{{params["100039"].value}}</th>
+                    <th>{{params["100040"].value}}</th>
+                    <!--<th>{{params["100041"].value}}</th>-->
+                    <th>{{params["100042"].value}}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="entry in entries| filter:search | limitTo: itemsPerPage : (currentPage * itemsPerPage)" ng-model="entries">
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="editEntry(entry_index[entry.id])">{{entry.id}}</a></td>
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="editEntry(entry_index[entry.id])">{{entry.code}}</a></td>
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="editEntry(entry_index[entry.id])">{{entry.name}}</a></td>
+                    <!--<td><a style="cursor: pointer;" class="btn-link" ng-click="editEntry(entry_index[entry.id])">{{entry.value}}</a></td>-->
+                    <td><a style="cursor: pointer;" class="btn-link" ng-click="editEntry(entry_index[entry.id])">{{entry.description}}</a></td>
+                    <td style="text-align:center;">
+                        <button type="button" class="btn" ng-click="editEntry(entry_index[entry.id])">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>            
+        </table>
+    </form>
+</div>
+<!-- Parameter info -->
+<div class="container-fluid" ng-show="edit" style="margin:0;padding:0">
+    <h3>{{groups_by_id[group_id].name}} - {{params[id].name}}</h3>
+    <hr />
+    <form role="form" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-warning" ng-click="returnToList()">
+                    <span class="glyphicon glyphicon-step-backward"></span> {{params["100048"].value}}
+                </button>
+            </div>
+            <div class="col-sm-8">
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-success" ng-click="saveEntry()" ng-disabled="!edit || error || incomplete">
+                    <span class="glyphicon glyphicon-save"></span> {{params["100049"].value}}
+                </button>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group has-feedback {{error_code_type}}">
+            <label for="id" class="col-sm-2 control-label">{{params["100031"].value}}</label>
+            <div class="col-sm-4">
+                <input id="id" type="text" class="form-control" ng-model="id"/>
+                <span class="glyphicon form-control-feedback {{error_code_sign}}"></span>
+            </div> 
+            <label for="code" class="col-sm-2 control-label">{{params["100039"].value}}</label>
+            <div class="col-sm-4">
+                <input id="code" type="text" class="form-control" ng-model="code"/>
+            </div>
+        </div>
+        <div class="form-group has-feedback {{error_name_type}}">
+            <label for="name" class="col-sm-2 control-label">{{params["100040"].value}}</label>
+            <div class="col-sm-4">
+                <input id="name" class="form-control" type="text" ng-model="name"/>
+                <span class="glyphicon form-control-feedback {{error_name_sign}}"></span>
+            </div>
+            <label for="value" class="col-sm-2 control-label">{{params["100041"].value}}</label>
+            <div class="col-sm-4">
+                <input id="value" class="form-control" type="text" ng-model="value_locale"/>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="group_id" class="col-sm-2 control-label">{{params["100032"].value}}</label>
+            <div class="col-sm-4">
+                <input id="group_id" class="form-control" type="text" ng-model="group_id"/>
+            </div>
+            <label for="type_id" class="col-sm-2 control-label">{{params["100033"].value}}</label>
+            <div class="col-sm-4">
+                <input id="type_id" class="form-control" type="text" ng-model="type_id"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="status_id" class="col-sm-2 control-label">{{params["100034"].value}}</label>
+            <div class="col-sm-4">
+                <input id="status_id" class="form-control" type="text" ng-model="status_id"/>
+            </div>
+            <label for="option_id" class="col-sm-2 control-label">{{params["100035"].value}}</label>
+            <div class="col-sm-4">
+                <input id="option_id" class="form-control" type="text" ng-model="option_id"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="language_id" class="col-sm-2 control-label">{{params["100036"].value}}</label>
+            <div class="col-sm-4">
+                <input id="language_id" class="form-control" type="text" ng-model="language_id"/>
+            </div>
+            <label for="entry_id" class="col-sm-2 control-label">{{params["100037"].value}}</label>
+            <div class="col-sm-4">
+                <input id="entry_id" class="form-control" type="text" ng-model="entry_id"/>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="file" class="col-sm-2 control-label">{{params["100044"].value}}</label>
+            <div class="col-sm-4">
+                <input id="file" type="file" accept="image/*">
+            </div>
+            <div class="col-sm-1">               
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-info" ng-click="uploadFile()">
+                    <span class="glyphicon glyphicon glyphicon-picture"></span> {{params["100045"].value}}
+                </button>
+            </div>
+            <div class="col-sm-1">               
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-block btn-danger" ng-click="deleteFile()">
+                    <span class="glyphicon glyphicon glyphicon-remove"></span> {{params["400014"].value}}
+                </button>
+            </div>
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-10">
+                <img ng-show="file.length > 0" ng-src='{{"data:image/jpeg;base64," + file}}' style="width:100%"/>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="description" class="col-sm-2 control-label">{{params["100042"].value}}</label>
+            <div class="col-sm-10">
+                <input id="description" class="form-control" type="text" ng-model="description_locale"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="note" class="col-sm-2 control-label">{{params["100043"].value}}</label>
+            <div class="col-sm-10">
+                <textarea id="note" class="form-control" rows="3" ng-model="note"></textarea>
+            </div>
+        </div>
+        <hr />
+    </form>
+</div>
+<!-- Modal Message Dialog -->
+<div id="messageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{msg_title}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{msg_body}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

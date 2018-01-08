@@ -1,0 +1,57 @@
+<form class="form-horizontal" name="updateForm">
+    <div class="form-group">
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <h4 class="col-sm-7">
+            Update User Info
+        </h4>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <label class="col-sm-2 control-label" for="name">Name</label>
+        <div class="col-sm-5">
+            <input id="name" type="text" class="form-control" placeholder="Name" ng-model="name" focus/>
+            <small class="error" data-ng-show="name.$error">Name is missing!</small>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <label class="col-sm-2 control-label" for="email">Email</label>
+        <div class="col-sm-5">
+            <input id="email" type="text" class="form-control" placeholder="Email" name="email" ng-model="email"/>
+            <div class="alert alert-danger" data-ng-show="email.$error">Email is not valid</div>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <label class="col-sm-2 control-label no-padding-right" for="password">New Password</label>
+        <div class="col-sm-5">
+            <input id="password" type="password" class="form-control" name="password" placeholder="Password" ng-model="password" required/>
+            <div class="alert alert-danger" data-ng-show="password.$invalid">Enter Password</div>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <label class="col-sm-2 control-label no-padding-right" for="password2">Confirm Password</label>
+        <div class="col-sm-5">
+            <input id="password2" type="password" class="form-control" name="password2" placeholder="Password Again" ng-model="password2" password-match="password" required/>                                
+            <div class="alert alert-danger" data-ng-show="password2.$dirty && password2.$error.required">Enter password again.</div>
+            <div class="alert alert-danger" data-ng-show="password.length > 0  && password2.length > 0 && password !== password2">Passwords do not match.</div>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>                            
+    <div class="form-group">
+        <div class="col-sm-7"></div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-block btn-primary" ng-click="update()" data-ng-disabled="updateForm.$invalid || password !== password2">
+                Update
+            </button>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+</form>

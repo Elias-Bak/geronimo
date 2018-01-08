@@ -1,0 +1,188 @@
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar, .navbar-fixed-top {
+    border: 0;
+    margin-bottom: 0;
+    background-color: whitesmoke;
+}
+.navbar-toggle {
+    background-color: buttonface;
+}
+.navbar-toggle .icon-bar {
+    background-color: #337ab7;
+}
+@media (max-width: 767px) {
+    .navbar-brand {
+        margin-left: -15px;
+    }
+    .navbar-fixed-top {
+        position: relative;        
+    }
+    #navbar {
+        max-height: 215px;
+    }
+}
+@media (min-width: 768px) {
+    .navbar-nav > li > a {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+/*
+ * Sidebar
+ */
+.sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
+}
+
+/* 
+ * Sidebar navigation 
+ */
+.nav-sidebar {
+    margin-right: -21px; /* 20px padding + 1px border */
+    margin-bottom: 20px;
+    margin-left: -20px;
+}
+.nav-sidebar > li > a {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+    color: #fff;
+    background-color: #428bca;
+}
+
+
+/*
+ * Main content
+ */
+.main {
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 45px; /* Move down content because we have a fixed navbar */
+}
+.main .page-header {
+    margin-top: 0;
+}
+@media (max-width: 767px) {
+    .main {
+        margin-top: 0;
+    }
+}
+
+
+/*
+ * Placeholder dashboard ideas
+ */
+.placeholders {
+    margin-bottom: 30px;
+    text-align: center;
+}
+.placeholders h4 {
+    margin-bottom: 0;
+}
+.placeholder {
+    margin-bottom: 20px;
+}
+.placeholder img {
+    display: inline-block;
+    border-radius: 50%;
+}
+
+
+/*
+ * General CSS rules
+ */
+.button_parameter {
+    /*width: 80%;*/
+    margin: 4px;
+}
+.margin_bottom {
+    margin-bottom: 7px !important;
+}
+.label_block {
+    display: block !important;
+    padding-bottom: 7px;
+}
+/*tr .btn {
+    padding: 1px 6px !important;
+}*/
+.row_icon {
+    text-align: center;
+    padding: 3px 0px !important;
+}
+.row_icon button {
+    padding: 5px 10px !important;
+}
+.main_body {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../images/background_login.jpg) no-repeat center center fixed;
+    background-size: cover;
+}
+.main_div_opacity {
+    background-color: rgba(255,255,255,0.7);
+}
+.main_div_transparent {
+    background-color: transparent;
+}
+@media (max-width: 767px) {
+    .div_filter {
+        margin-bottom: 10px;
+    }
+    .button_parameter {
+        width: 100%;
+    }
+    .col_hide {
+        display: none !important;
+    }
+    .main_body {
+        background: none;
+    }
+}
+.reports_desc pre {
+    white-space: pre-wrap;
+    word-break: normal;
+    min-height: 57px;
+}
+
+/*
+ * Google signin
+ */
+.g-signin2 {
+    margin: 7px;
+}
+
+/*
+ * Google AdSense
+ */
+#google_esf body {
+    width: 100%;
+    min-height: 91px;
+}
+#google_ads_frame2 body {
+    width: 100%;
+    min-height: 91px;
+}
